@@ -1,0 +1,6 @@
+transformers
+accelerate
+Pillow
+tqdm
+numpy
+absl-py
