@@ -58,15 +58,11 @@
 3.  **Install dependencies:**
 
     ```bash
-    export CC=/usr/bin/gcc-9
-    export CXX=/usr/bin/g++-9
-
     conda install cuda-toolkit=12.8 cuda-nvcc=12.8 -c nvidia
 
     pip install -r requirements.txt
 
-    pip install torch torchvision torchaudio
-    pip install diffusers==0.30.1 huggingface-hub==0.33.4 transformers==4.46.3 tokenizers==0.20.3
+    pip install --force-reinstall torch torchvision torchaudio
 
     pip install submodules/diff-gaussian-rasterization-depth
     pip install submodules/simple-knn
