@@ -10,3 +10,6 @@
 [submodule "submodules/FlowEdit"]
 	path = submodules/FlowEdit
 	url = git@github.com:jayin92/FlowEdit.git
+[submodule "submodules/simple-knn"]
+	path = submodules/simple-knn
+	url = https://github.com/camenduru/simple-knn
