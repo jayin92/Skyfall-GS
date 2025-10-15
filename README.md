@@ -15,8 +15,8 @@
   <h3 align="center"><a href="https://skyfall-gs.jayinnn.dev/">🌐 Project Page</a> | <a href="http://arxiv.org/abs/TBD">📄 Paper</a></h3>
 </p>
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=EQEpNE_ggV0">
-    <img src="https://img.youtube.com/vi/EQEpNE_ggV0/hqdefault.jpg" alt="Skyfall-GS Teaser Video" width="75%">
+  <a href="https://www.youtube.com/watch?v=zj2-aGSe6ao">
+    <img src="https://img.youtube.com/vi/zj2-aGSe6ao/hqdefault.jpg" alt="Skyfall-GS Teaser Video" width="75%">
   </a>
 </div>
 
@@ -51,7 +51,7 @@
 2.  **Create and activate a Conda environment:**
 
     ```bash
-    conda create -y -n skyfall-gs python=3.8
+    conda create -y -n skyfall-gs python=3.10
     conda activate skyfall-gs
     ```
 
@@ -61,10 +61,12 @@
     export CC=/usr/bin/gcc-9
     export CXX=/usr/bin/g++-9
 
-    pip install torch torchvision torchaudio
-    conda install cudatoolkit-dev=12.1 -c nvidia
+    conda install cuda-toolkit=12.8 cuda-nvcc=12.8 -c nvidia
 
     pip install -r requirements.txt
+
+    pip install torch torchvision torchaudio
+    pip install diffusers==0.30.1 huggingface-hub==0.33.4 transformers==4.46.3 tokenizers==0.20.3
 
     pip install submodules/diff-gaussian-rasterization-depth
     pip install submodules/simple-knn
