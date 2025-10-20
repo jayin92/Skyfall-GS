@@ -294,6 +294,8 @@ This codebase is built upon the following open-source projects:
 
 We thank the authors for their contributions.
 
+This research was funded by the National Science and Technology Council, Taiwan, under Grants NSTC 112-2222-E-A49-004-MY2 and 113-2628-EA49-023-. The authors are grateful to Google, NVIDIA, and MediaTek Inc. for their generous donations. Yu-Lun Liu acknowledges the Yushan Young Fellow Program by the MOE in Taiwan.
+
 ## Citation
 
 If you find this work useful, please consider citing:
@@ -304,7 +306,7 @@ If you find this work useful, please consider citing:
   author = {Jie-Ying Lee and Yi-Ruei Liu and Shr-Ruei Tsai and Wei-Cheng Chang and Chung-Ho Wu and Jiewen Chan and Zhenjun Zhao and Chieh Hubert Lin and Yu-Lun Liu},
   journal = {arXiv preprint},
   year = {2025},
-  eprint = {TBD},
+  eprint = {2510.15869},
   archivePrefix = {arXiv}
 }
 ```
