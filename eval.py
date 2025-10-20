@@ -147,35 +147,21 @@ def extract_frames(video_path, output_dir, frame_rate=1, prefix="", resolution=N
 
     print(f"FPS: {fps}, Total Frames: {total_frames}")
 
-    # Calculate frame interval based on desired frame rate
-    frame_interval = int(total_frames / frame_rate)  # frame_rate becomes the number of frames per image
-
-    # Check if frame_interval is valid
-    if frame_interval <= 0:
-        frame_interval = 1
-
-    print(f"Frame Interval: {frame_interval}")
-
-    # Extract frames
-    success, frame = video.read()
-    count = 0
+    indices = np.linspace(0, total_frames - 1, frame_rate, endpoint=False, dtype=int)
+    
     frame_count = 0
-
-    while success:
-        if count % frame_interval == 0:
+    for idx in indices:
+        video.set(cv2.CAP_PROP_POS_FRAMES, idx)
+        ret, frame = video.read()
+        if ret:
             if resolution is not None:
                 frame = cv2.resize(frame, (resolution, resolution))
             cv2.imwrite(os.path.join(output_dir, f"{prefix}frame_{frame_count:05d}.png"), frame)
             frame_count += 1
-            if frame_count == frame_rate:
-                break
-
-        # Read the next frame
-        success, frame = video.read()
-        count += 1
 
     # Release the video file
     video.release()
+
     return frame_count
 
 def extract_uniform_frames(image_folder, num_frames=24):
@@ -184,15 +170,9 @@ def extract_uniform_frames(image_folder, num_frames=24):
     image_files = sorted([f for f in os.listdir(image_folder) if f.endswith(('.jpg', '.png', '.jpeg'))])
     total_frames = len(image_files)
 
-    if total_frames <= num_frames:
-        return [os.path.join(image_folder, f) for f in image_files]
+    assert total_frames == num_frames, f"Expected {num_frames} frames, but found {total_frames} frames in {image_folder}"
 
-    # Calculate indices for uniform sampling (excluding the last frame)
-    indices = np.linspace(0, total_frames - 1, num_frames, endpoint=False, dtype=int)
-    print(f"Selected frame indices: {indices}")
-
-    selected_files = [os.path.join(image_folder, image_files[i]) for i in indices]
-    return selected_files
+    return [os.path.join(image_folder, f) for f in image_files]
 
 def extract_frames_from_video(video_path, num_frames=24):
     """Extract uniformly distributed frames from a video."""
@@ -424,6 +404,7 @@ def evaluate_scene_method_integrated(gt_images, method_frames, iqa_calc, scene_n
             results[f'{metric_name}_std'] = None
 
     results['num_frames'] = min_frames
+
     return results
 
 def main():
@@ -431,7 +412,7 @@ def main():
     parser.add_argument("--data_dir", type=str, default="data_eval", help="Path to the data directory")
     parser.add_argument("--output_file", type=str, default="metrics_results.csv", help="Output CSV file name")
     parser.add_argument("--temp_dir", type=str, default="temp_frames", help="Path to the temporary directory for frames")
-    parser.add_argument("--frame_rate", type=float, default=24, help="Number of frames to extract")
+    parser.add_argument("--frame_rate", type=int, default=24, help="Number of frames to extract")
     parser.add_argument("--resolution", type=int, default=1024, help="Resolution of the frames")
     parser.add_argument("--no_resize", action="store_true", default=False, help="Do not resize the frames")
     parser.add_argument("--no_patchify", action="store_true", default=False, help="Do not use patchify for CLIP-FID/CMMD")
