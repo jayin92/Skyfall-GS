@@ -291,6 +291,7 @@ This codebase is built upon the following open-source projects:
 -   [WildGuassians](https://github.com/jkulhanek/wild-gaussians)
 -   [FlowEdit](https://github.com/fallenshock/FlowEdit)
 -   [MoGe](https://github.com/microsoft/MoGe)
+-   [SatelliteSfM](https://github.com/Kai-46/SatelliteSfM)
 
 We thank the authors for their contributions.
 
