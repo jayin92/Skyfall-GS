@@ -27,6 +27,7 @@
 ## Table of Contents
 - [Installation](#installation)
 - [Dataset](#dataset)
+- [Running on Custom Datasets](#running-on-custom-datasets)
 - [Training](#training)
   - [Stage 1: Reconstruction](#stage-1-reconstruction)
   - [Stage 2: Synthesis with Iterative Dataset Update (IDU)](#stage-2-synthesis-with-iterative-dataset-update-idu)
@@ -102,6 +103,29 @@ data/
     ├── NYC_004
     ├── NYC_010
     └── ...
+```
+
+## Running on Custom Datasets
+
+We supports training on custom datasets from two sources: COLMAP reconstructions and satellite imagery. For detailed preprocessing instructions, please refer to the [SatelliteSfM repository](https://github.com/jayin92/SatelliteSfM).
+
+### Data Format Requirements
+
+Your custom dataset should have the following structure to work with Skyfall-GS:
+
+```
+your_dataset/
+├── images/                    # RGB images
+│   ├── image_001.png
+│   ├── image_002.png
+│   └── ...
+├── masks/                   # Binary masks for valid pixels (optional: if not provided, all non-black pixels are considered valid)
+│   ├── *.npy               # NumPy format (for processing)
+│   ├── *.png               # PNG format (for visualization)
+│   └── ...
+├── transforms_train.json      # Training camera parameters
+├── transforms_test.json       # Testing camera parameters (optional)
+└── points3D.txt              # 3D point cloud
 ```
 
 ## Training
