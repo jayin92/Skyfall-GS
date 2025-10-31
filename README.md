@@ -12,7 +12,7 @@
     <a href="https://hubert0527.github.io/"><strong>Chieh Hubert Lin</strong></a> ·
     <a href="https://yulunalexliu.github.io/"><strong>Yu-Lun Liu</strong></a>
   </p>
-  <h3 align="center"><a href="https://skyfall-gs.jayinnn.dev/">🌐 Project Page</a> | <a href="http://arxiv.org/abs/TBD">📄 Paper</a></h3>
+  <h3 align="center"><a href="https://skyfall-gs.jayinnn.dev/">🌐 Project Page</a> | <a href="https://arxiv.org/abs/2510.15869">📄 Paper</a></h3>
 </p>
 <div align="center">
   <a href="https://www.youtube.com/watch?v=zj2-aGSe6ao">
