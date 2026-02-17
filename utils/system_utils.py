@@ -24,5 +24,14 @@ def mkdir_p(folder_path):
             raise
 
 def searchForMaxIteration(folder):
-    saved_iters = [int(fname.split("_")[-1]) for fname in os.listdir(folder)]
+    saved_iters = []
+    for fname in os.listdir(folder):
+        try:
+            # Try to parse the iteration number from the filename
+            saved_iters.append(int(fname.split("_")[-1]))
+        except (ValueError, IndexError):
+            # Skip files that don't match the expected pattern
+            continue
+    if not saved_iters:
+        return 0
     return max(saved_iters)
