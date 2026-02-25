@@ -21,12 +21,12 @@ def extract_reference_frames(video_path, num_frames=1, output_dir="reference_fra
     cmd = f"ffprobe -v error -select_streams v:0 -count_packets -show_entries stream=nb_read_packets -of csv=p=0 {video_path}"
     try:
         frame_count = int(subprocess.check_output(cmd, shell=True).decode('utf-8').strip())
-    except:
+    except Exception:
         # Fallback method
         cmd = f"ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of csv=p=0 {video_path}"
         try:
             frame_count = int(subprocess.check_output(cmd, shell=True).decode('utf-8').strip())
-        except:
+        except Exception:
             print("Warning: Could not determine frame count, assuming 240 frames")
             frame_count = 240
     
