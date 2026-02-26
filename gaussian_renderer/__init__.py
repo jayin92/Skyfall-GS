@@ -27,7 +27,7 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
     screenspace_points = torch.zeros_like(pc.get_xyz, dtype=pc.get_xyz.dtype, requires_grad=True, device="cuda") + 0
     try:
         screenspace_points.retain_grad()
-    except:
+    except Exception:
         pass
 
     # Set up rasterization configuration
@@ -86,7 +86,7 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
                     embedding = pc.appearance_embeddings[viewpoint_camera.uid]
                     # print("Use embedding from camera", viewpoint_camera.uid)
                     # embedding = pc.appearance_embeddings[5]
-                except:
+                except Exception:
                     print(pc.appearance_embeddings.shape)
                     print('Embedding not found for camera', viewpoint_camera.uid, 'use mean embedding instead')
                     with torch.no_grad():  # important to avoid no needed gradients

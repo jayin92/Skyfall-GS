@@ -154,7 +154,7 @@ def readColmapSceneInfo(path, images, eval, llffhold=8):
         cameras_intrinsic_file = os.path.join(path, "sparse/0", "cameras.bin")
         cam_extrinsics = read_extrinsics_binary(cameras_extrinsic_file)
         cam_intrinsics = read_intrinsics_binary(cameras_intrinsic_file)
-    except:
+    except Exception:
         cameras_extrinsic_file = os.path.join(path, "sparse/0", "images.txt")
         cameras_intrinsic_file = os.path.join(path, "sparse/0", "cameras.txt")
         cam_extrinsics = read_extrinsics_text(cameras_extrinsic_file)
@@ -180,12 +180,12 @@ def readColmapSceneInfo(path, images, eval, llffhold=8):
         print("Converting point3d.bin to .ply, will happen only the first time you open the scene.")
         try:
             xyz, rgb, _ = read_points3D_binary(bin_path)
-        except:
+        except Exception:
             xyz, rgb, _ = read_points3D_text(txt_path)
         storePly(ply_path, xyz, rgb)
     try:
         pcd = fetchPly(ply_path)
-    except:
+    except Exception:
         pcd = None
 
     scene_info = SceneInfo(point_cloud=pcd,
@@ -263,7 +263,7 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
         storePly(ply_path, xyz, SH2RGB(shs) * 255)
     try:
         pcd = fetchPly(ply_path)
-    except:
+    except Exception:
         pcd = None
 
     scene_info = SceneInfo(point_cloud=pcd,
@@ -347,7 +347,7 @@ def readMultiScaleNerfSyntheticInfo(path, white_background, eval, load_allres=Fa
         storePly(ply_path, xyz, SH2RGB(shs) * 255)
     try:
         pcd = fetchPly(ply_path)
-    except:
+    except Exception:
         pcd = None
 
     scene_info = SceneInfo(point_cloud=pcd,
@@ -481,7 +481,7 @@ def readSatelliteInfo(path, white_background, eval, extension=".png"):
         pcd = fetchPly(ply_path)
         # print number of points
         print(f"Number of points in the point cloud: {len(pcd.points)}")
-    except:
+    except Exception:
         pcd = None
 
     scene_info = SceneInfo(point_cloud=pcd,

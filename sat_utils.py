@@ -162,7 +162,7 @@ def dsm_pointwise_diff(in_dsm_path, gt_dsm_path, dsm_metadata, gt_mask_path=None
     fix_xy = False
     try:
         import dsmr
-    except:
+    except Exception:
         print("Warning: dsmr not found ! DSM registration will only use the Z dimension")
         fix_xy = True
     if fix_xy:
