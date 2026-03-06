@@ -111,13 +111,19 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder):
         image = copy.deepcopy(image)
         cx = (cx - width / 2) / width * 2
         cy = (cy - height / 2) / height * 2
-        
-        cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, 
+
+        # For COLMAP data, depth and mask are not available
+        depth = None
+        mask = None
+
+        cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX,
                               cx=cx, cy=cy,
                               image=image,
-                              image_path=image_path, 
-                              image_name=image_name, 
-                              width=width, 
+                              image_path=image_path,
+                              image_name=image_name,
+                              depth=depth,
+                              mask=mask,
+                              width=width,
                               height=height)
         cam_infos.append(cam_info)
     sys.stdout.write('\n')
@@ -229,11 +235,22 @@ def readCamerasFromTransforms(path, transformsfile, white_background, extension=
             image = Image.fromarray(np.array(arr*255.0, dtype=np.byte), "RGB")
 
             fovy = focal2fov(fov2focal(fovx, image.size[0]), image.size[1])
-            FovY = fovy 
+            FovY = fovy
             FovX = fovx
 
-            cam_infos.append(CameraInfo(uid=idx, R=R, T=T, FovY=FovY, FovX=FovX, image=image,
-                            image_path=image_path, image_name=image_name, width=image.size[0], height=image.size[1]))
+            # For NeRF synthetic data, we don't have cx, cy, depth, mask in the JSON
+            # Assume centered principal point and no depth/mask data
+            cx = 0.0
+            cy = 0.0
+            depth = None
+            mask = None
+
+            cam_infos.append(CameraInfo(uid=idx, R=R, T=T, FovY=FovY, FovX=FovX,
+                            cx=cx, cy=cy,
+                            image=image,
+                            image_path=image_path, image_name=image_name,
+                            depth=depth, mask=mask,
+                            width=image.size[0], height=image.size[1]))
             
     return cam_infos
 
@@ -311,11 +328,21 @@ def readMultiScale(path, white_background,split, only_highres=False):
 
         fovx = focal2fov(meta["focal"][idx], image.size[0])
         fovy = focal2fov(meta["focal"][idx], image.size[1])
-        FovY = fovy 
+        FovY = fovy
         FovX = fovx
 
-        cam_infos.append(CameraInfo(uid=idx, R=R, T=T, FovY=FovY, FovX=FovX, image=image,
-                        image_path=image_path, image_name=image_name, width=image.size[0], height=image.size[1]))
+        # For LLFF data, assume centered principal point and no depth/mask data
+        cx = 0.0
+        cy = 0.0
+        depth = None
+        mask = None
+
+        cam_infos.append(CameraInfo(uid=idx, R=R, T=T, FovY=FovY, FovX=FovX,
+                        cx=cx, cy=cy,
+                        image=image,
+                        image_path=image_path, image_name=image_name,
+                        depth=depth, mask=mask,
+                        width=image.size[0], height=image.size[1]))
     return cam_infos
 
 
