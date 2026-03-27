@@ -156,7 +156,12 @@ def colorize_depth_torch(depth_tensor, mask=None, normalize=True, cmap='Spectral
     if normalize:
         min_disp = np.nanquantile(disp, 0.01)
         max_disp = np.nanquantile(disp, 0.99)
-        disp = (disp - min_disp) / (max_disp - min_disp)
+        # Avoid division by zero for constant depth
+        disp_range = max_disp - min_disp
+        if disp_range > 1e-6:
+            disp = (disp - min_disp) / disp_range
+        else:
+            disp = np.zeros_like(disp)
     
     # Apply colormap
     colored = plt.get_cmap(cmap)(1.0 - disp)
