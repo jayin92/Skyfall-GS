@@ -490,7 +490,7 @@ def main():
         print(f"Extracted a total of {total_gt_frames} frames from all GT videos")
 
         # Get GT images for IQA evaluation
-        gt_images_for_iqa = extract_uniform_frames(str(gt_combined_dir), int(args.frame_rate))
+        gt_images_for_iqa = extract_uniform_frames(str(gt_combined_dir), total_gt_frames)
 
         # Process each method
         for method in methods:
@@ -511,7 +511,7 @@ def main():
             print(f"Extracted a total of {total_method_frames} frames from all {method} videos")
 
             # Get method frames for IQA evaluation
-            method_images_for_iqa = extract_uniform_frames(str(method_combined_dir), int(args.frame_rate))
+            method_images_for_iqa = extract_uniform_frames(str(method_combined_dir), total_method_frames)
             method_frames_for_iqa = [cv2.imread(img_path) for img_path in method_images_for_iqa]
 
             # Calculate IQA metrics (PSNR, SSIM, LPIPS)
