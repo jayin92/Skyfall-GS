@@ -364,13 +364,14 @@ This research was funded by the National Science and Technology Council, Taiwan,
 If you find this work useful, please consider citing:
 
 ```bibtex
-@article{lee2025SkyfallGS,
+@inproceedings{lee2026skyfall,
   title = {{Skyfall-GS}: Synthesizing Immersive {3D} Urban Scenes from Satellite Imagery},
-  author = {Jie-Ying Lee and Yi-Ruei Liu and Shr-Ruei Tsai and Wei-Cheng Chang and Chung-Ho Wu and Jiewen Chan and Zhenjun Zhao and Chieh Hubert Lin and Yu-Lun Liu},
-  journal = {arXiv preprint},
-  year = {2025},
-  eprint = {2510.15869},
-  archivePrefix = {arXiv}
+  author = {Lee, Jie-Ying and Liu, Yi-Ruei and Tsai, Shr-Ruei and Chang, Wei-Cheng and Wu, Chung-Ho and Chan, Jiewen and Zhao, Zhenjun and Lin, Chieh Hubert and Liu, Yu-Lun},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  pages = {431--454},
+  year = {2026},
+  publisher = {Springer},
+  doi = {10.1007/978-3-032-37627-5_24}
 }
 ```
 
