@@ -69,8 +69,9 @@ def create_offset_gt(image, offset):
     id_coords = torch.from_numpy(id_coords).cuda()
     
     id_coords = id_coords.permute(1, 2, 0) + offset
-    id_coords[..., 0] /= (width - 1)
-    id_coords[..., 1] /= (height - 1)
+    # Avoid division by zero for single-pixel dimensions
+    id_coords[..., 0] /= max(width - 1, 1)
+    id_coords[..., 1] /= max(height - 1, 1)
     id_coords = id_coords * 2 - 1
     
     image = torch.nn.functional.grid_sample(image[None], id_coords[None], align_corners=True, padding_mode="border")[0]
@@ -235,10 +236,9 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         
         opacity_loss = 0.0
         if opt.lambda_opacity > 0:
-            # Get each gaussians' opacity and use cross entropy loss
+            # Get each gaussians' opacity and use entropy loss to encourage binary values
             opacity = gaussians.get_opacity.clamp(1.0e-3, 1.0 - 1.0e-3)
-            opacity_loss = torch.nn.functional.binary_cross_entropy(opacity, opacity)
-            # opacity_loss = torch.mean(-opacity * torch.log(opacity + 1e-6))
+            opacity_loss = torch.mean(-opacity * torch.log(opacity + 1e-6))
             loss += opt.lambda_opacity * opacity_loss
 
 
@@ -272,7 +272,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
             depth_loss_pseudo = depth_loss_func(gt_depth, render_depth)
 
             if torch.isnan(depth_loss_pseudo).sum() == 0:
-                loss_scale = min((iteration - args.start_sample_pseudo) / 500., 1)
+                loss_scale = min((iteration - opt.start_sample_pseudo) / 500., 1)
                 loss += loss_scale * opt.lambda_pseudo_depth * depth_loss_pseudo
                 depth_loss += depth_loss_pseudo
 
@@ -459,28 +459,9 @@ def generate_idu_training_set(
                 n_avg=flow_edit_n_avg
             )
         elif use_difix3d:
-            refine_pipe = Difix3DRefineIDU(
-                save_path=refine_path,
-                device="cuda:0",
-                model_name=difix3d_model,
-                use_reference=difix3d_use_reference
-            )
-            final_imgs = refine_pipe.run(
-                imgs,
-                prompt=difix3d_prompt,
-                num_inference_steps=difix3d_steps,
-                timesteps=difix3d_timesteps,
-                guidance_scale=difix3d_guidance
-            )
+            raise NotImplementedError("Difix3D refine is not yet implemented. Please use FlowEdit refine instead.")
         elif use_dreamscene:
-            refine_pipe = DreamSceneRefineIDU(
-                save_path=refine_path,
-                device="cuda:0",
-                model="sd21" if use_sd21 else "diffusionsat",
-            )
-            final_imgs = refine_pipe.run(
-                imgs,
-            )
+            raise NotImplementedError("DreamScene refine is not yet implemented. Please use FlowEdit refine instead.")
         else:
             raise NotImplementedError("DiffusionSat refine is deprecated")
         if refine_pipe:
@@ -833,10 +814,9 @@ def training_idu_episode(
         
         opacity_loss = 0.0
         if opt.lambda_opacity > 0:
-            # Get each gaussians' opacity and use cross entropy loss
+            # Get each gaussians' opacity and use entropy loss to encourage binary values
             opacity = gaussians.get_opacity.clamp(1.0e-3, 1.0 - 1.0e-3)
-            opacity_loss = torch.nn.functional.binary_cross_entropy(opacity, opacity)
-            # opacity_loss = torch.mean(-opacity * torch.log(opacity + 1e-6))
+            opacity_loss = torch.mean(-opacity * torch.log(opacity + 1e-6))
             if loss:
                 loss += opt.lambda_opacity * opacity_loss
             else:
@@ -1027,7 +1007,12 @@ def colorize_depth_torch(depth_tensor, mask=None, normalize=True, cmap='Spectral
     if normalize:
         min_disp = np.nanquantile(disp, 0.01)
         max_disp = np.nanquantile(disp, 0.99)
-        disp = (disp - min_disp) / (max_disp - min_disp)
+        # Avoid division by zero for constant depth
+        disp_range = max_disp - min_disp
+        if disp_range > 1e-6:
+            disp = (disp - min_disp) / disp_range
+        else:
+            disp = np.zeros_like(disp)
     
     # Apply colormap
     colored = plt.get_cmap(cmap)(1.0 - disp)
